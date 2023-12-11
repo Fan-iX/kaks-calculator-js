@@ -139,10 +139,10 @@ class Base {
 	* Output: get the number of nonsense codons
 	* Return Value: int
 	***********************************/
-	getNumNonsense(genetic_code) {
+	getNumNonsense() {
 		let num, i;
 		for (num = i = 0; i < CODON; i++) {
-			if (this.getAminoAcid(i, genetic_code) == '!') num++;
+			if (this.getAminoAcid(i) == '!') num++;
 		}
 		return num;
 	}
