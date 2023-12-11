@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaKs_Calculator 2.0</title>
+    <style>
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 4px;
+            box-sizing: border-box;
+        }
+
+        #input,
+        #output {
+            flex: 1
+        }
+    </style>
+</head>
+
+<body>
+    <h1>KaKs_Calculator 2.0</h1>
+    <p>The javascript version of <a href="https://sourceforge.net/projects/kakscalculator2/">KaKs_Calculator 2.0</a>.</p>
+    <textarea id="input">NP_000006.1
+ATGGACATTGAAGCATATTTTGAAAGAATTGGCTATAAGAACTCTAGGAACAAATTGGACTTGGAAACATTAACTGACATTCTTGAGCACCAGATCCGGGCTGTTCCCTTTGAGAACCTTAACATGCATTGTGGGCAAGCCATGGAGTTGGGCTTAGAGGCTATTTTTGATCACATTGTAAGAAGAAACCGGGGTGGGTGGTGTCTCCAGGTCAATCAACTTCTGTACTGGGCTCTGACCACAATCGGTTTTCAGACCACAATGTTAGGAGGGTATTTTTACATCCCTCCAGTTAACAAATACAGCACTGGCATGGTTCACCTTCTCCTGCAGGTGACCATTGACGGCAGGAATTACATTGTCGATGCTGGGTCTGGAAGCTCCTCCCAGATGTGGCAGCCTCTAGAATTAATTTCTGGGAAGGATCAGCCTCAGGTGCCTTGCATTTTCTGCTTGACAGAAGAGAGAGGAATCTGGTACCTGGACCAAATCAGGAGAGAGCAGTATATTACAAACAAAGAATTTCTTAATTCTCATCTCCTGCCAAAGAAGAAACACCAAAAAATATACTTATTTACGCTTGAACCTCGAACAATTGAAGATTTTGAGTCTATGAATACATACCTGCAGACGTCTCCAACATCTTCATTTATAACCACATCATTTTGTTCCTTGCAGACCCCAGAAGGGGTTTACTGTTTGGTGGGCTTCATCCTCACCTATAGAAAATTCAATTATAAAGACAATACAGATCTGGTCGAGTTTAAAACTCTCACTGAGGAAGAGGTTGAAGAAGTGCTGAAAAATATATTTAAGATTTCCTTGGGGAGAAATCTCGTGCCCAAACCTGGTGATGGATCCCTTACTATT
+ATGGACATCGAAGCATACTTTGAAAGGATTGGTTACAAGAACTCAGTGAATAAATTGGACTTAGCCACATTAACTGAAGTTCTTCAGCACCAGATGCGAGCAGTTCCTTTTGAGAATCTTAACATGCATTGTGGAGAAGCCATGCATCTGGATTTACAGGACATTTTTGACCACATAGTAAGGAAGAAGAGAGGTGGATGGTGTCTCCAGGTTAATCATCTGCTGTACTGGGCTCTGACCAAAATGGGCTTTGAAACCACAATGTTGGGAGGATATGTTTACATAACTCCAGTCAGCAAATATAGCAGTGAAATGGTCCACCTTCTAGTACAGGTGACCATCAGTGACAGGAAGTACATTGTGGATTCCGCCTATGGAGGCTCCTACCAGATGTGGGAGCCTCTGGAATTAACATCTGGGAAGGATCAGCCTCAGGTGCCTGCCATCTTCCTTTTGACAGAGGAGAATGGAACCTGGTACTTGGACCAAATCAGAAGAGAGCAGTATGTTCCAAATGAAGAATTTGTTAACTCAGACCTCCTTGAAAAGAACAAATATCGAAAAATCTACTCCTTTACTCTTGAGCCCCGAGTTATCGAGGATTTTGAATATGTGAATAGCTATCTTCAGACATCGCCAGCATCTGTGTTTGTAAGCACATCGTTCTGTTCCTTGCAGACCTCGGAAGGGGTTCACTGTTTAGTGGGCTCCACCTTTACAAGTAGGAGATTCAGCTATAAGGACGATGTAGATCTGGTTGAGTTTAAATATGTGAATGAGGAAGAAATAGAAGATGTACTGAAAACCGCATTTGGCATTTCTTTGGAGAGAAAGTTTGTGCCCAAACATGGTGAACTAGTTTTTACTATT
+</textarea>
+    <div>
+        <select id="code" value="1">
+            <option value="1">1-Standard Code </option>
+            <option value="2">2-Vertebrate Mitochondrial Code</option>
+            <option value="3">3-Yeast Mitochondrial Code </option>
+            <option value="4">4-Mold Mitochondrial Code</option>
+            <option value="5">5-Invertebrate Mitochondrial Code </option>
+            <option value="6">6-Ciliate, Dasycladacean and Hexamita Code</option>
+            <option value="9">9-Echinoderm and Flatworm Mitochondrial Code </option>
+            <option value="10">10-Euplotid Nuclear Code</option>
+            <option value="11">11-Bacterial and Plant Plastid Code </option>
+            <option value="12">12-Alternative Yeast Nuclear Code</option>
+            <option value="13">13-Ascidian Mitochondrial Code </option>
+            <option value="14">14-Alternative Flatworm Mitochondrial Code</option>
+            <option value="15">15-Blepharisma Nuclear Code </option>
+            <option value="16">16-Chlorophycean Mitochondrial Code</option>
+            <option value="21">21-Trematode Mitochondrial Code </option>
+            <option value="22">22-Scenedesmus obliquus mitochondrial Code</option>
+            <option value="23">23-Thraustochytrium Mitochondrial Code</option>
+        </select>
+        <select id="model" value="GMYN">
+            <option value="NG">NG</option>
+            <option value="LWL">LWL</option>
+            <option value="LPB">LPB</option>
+            <option value="MLWL">MLWL</option>
+            <option value="MLPB">MLPB</option>
+            <option value="GY">GY</option>
+            <option value="YN">YN</option>
+            <option value="MYN">MYN</option>
+            <option value="MS">MS</option>
+            <option value="MA">MA</option>
+            <option value="GNG">GNG</option>
+            <option value="GLWL">GLWL</option>
+            <option value="GLPB">GLPB</option>
+            <option value="GMLWL">GMLWL</option>
+            <option value="GMLPB">GMLPB</option>
+            <option value="GYN">GYN</option>
+            <option value="GMYN">GMYN</option>
+            <option value="GMYN">ALL</option>
+        </select>
+        <button onclick="calc()">Calculate Ka/Ks</button>
+    </div>
+    <textarea id="output"></textarea>
+    <p>All calculations are done locally in your web browser.</p>
+</body>
+<script src="src/base.js"></script>
+<script src="src/KaKs.js"></script>
+<script src="src/NG86.js"></script>
+<script src="src/LWL85.js"></script>
+<script src="src/LPB93.js"></script>
+<script src="src/YN00.js"></script>
+<script src="src/MYN.js"></script>
+<script src="src/GY94.js"></script>
+<script src="src/MSMA.js"></script>
+<script>
+    function calc() {
+        let kk = new KAKS()
+        document.getElementById("output").value = kk.Run(
+            document.getElementById("input").value,
+            ["-C", document.getElementById("code").value, "-M", document.getElementById("model").value]
+        )
+    }
+    // calc()
+</script>
+
+</html>
