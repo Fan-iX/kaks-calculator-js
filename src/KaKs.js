@@ -292,7 +292,7 @@ class KAKS extends Base {
 					//Linux version don't need this line
 					this.tempt++;
 				} else {
-					this.result = "";//for Gamma choices result delete the first line 
+					// this.result = "";//for Gamma choices result delete the first line 
 				}
 				if (this.gy94) this.start_GY94(-1);
 				if (this.ms || this.ma) this.start_MSMA(-1);
