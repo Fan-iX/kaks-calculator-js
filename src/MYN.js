@@ -143,7 +143,7 @@ class MYN extends YN00 {
 
 
 	/* Calculate transition probability matrix(64*64) */
-	GetPMatCodon(kappa, omega) {
+	GetPMatCodon(omega) {
 
 		let i, j, k, ndiff, pos = 0, from = new Array(3).fill(0), to = new Array(3).fill(0);
 		let mr;
@@ -235,8 +235,6 @@ class MYN extends YN00 {
 
 		tc = pi4[0] * pi4[1];
 		ag = pi4[2] * pi4[3];
-
-
 		if ((P1 + P2 + Q) > 1 || (P1 + P2) < -1e-10 || Q < -1e-10 || Math.abs(Y + R - 1) > 1e-8) {
 			return [kappatc_TN93, kappaag_TN93];
 		}
@@ -285,10 +283,10 @@ class MYN extends YN00 {
 	}
 
 	/* Correct Ka and Ks */
-	CorrectKaksTN93(n, P1, P2, Q, pi4, kaks, SEkaks) {
+	CorrectKaksTN93(n, P1, P2, Q, pi4) {
 
 		let failTN93;
-		let tc, ag, Y, R, a1, a2, b, A, B, C;
+		let tc, ag, Y, R, a1, a2, b, A, B, C, kaks, SEkaks;
 		let Qsmall = 1e-10;
 
 		a1 = a2 = b = failTN93 = 0;
@@ -521,12 +519,11 @@ class MYN extends YN00 {
 	}
 
 	DistanceYN00(seq1, seq2) {
-
-		let j, ir, nround = 100, status = 1;
+		let j, ir, nround = 100;
 		let fbS = new Array(4).fill(0), fbN = new Array(4).fill(0),
 			fbSt, fbNt;
 		let St, Nt, Sdts1, Sdts2, Sdtv, Ndts1, Ndts2, Ndtv;
-		let w0 = 0, S0 = 0, N0 = 0, dS0 = 0, dN0 = 0, accu = 5e-8, minomega = 1e-5, maxomega = 99;
+		let w0 = 0, dS0 = 0, dN0 = 0, accu = 5e-8, minomega = 1e-5, maxomega = 99;
 		let PMatrix = new Array(CODON * CODON).fill(0);
 		let dS = 0.1, dN = 0.1, SEdS = NA, SEdN = NA;
 
@@ -557,7 +554,7 @@ class MYN extends YN00 {
 		for (ir = 0; ir < nround; ir++) {   /* iteration */
 
 			//Get transition probability matrix from one codon to another
-			PMatrix = this.GetPMatCodon(this.kappa, this.omega);
+			PMatrix = this.GetPMatCodon(this.omega);
 
 			//Count differences
 			[Sdts1, Sdts2, Sdtv, Ndts1, Ndts2, Ndtv] = this.CountDiffs(seq1, seq2, PMatrix);
@@ -579,15 +576,11 @@ class MYN extends YN00 {
 			}
 
 			//Ks
-			[dS, SEdS] = this.CorrectKaksTN93(this.S, Sdts1 / this.S, Sdts2 / this.S, Sdtv / this.S, fbS, dS, SEdS);
+			[dS, SEdS] = this.CorrectKaksTN93(this.S, Sdts1 / this.S, Sdts2 / this.S, Sdtv / this.S, fbS);
 			//Ka
-			[dN, SEdN] = this.CorrectKaksTN93(this.N, Ndts1 / this.N, Ndts2 / this.N, Ndtv / this.N, fbN, dN, SEdN);
-
-
-			status = -1;
+			[dN, SEdN] = this.CorrectKaksTN93(this.N, Ndts1 / this.N, Ndts2 / this.N, Ndtv / this.N, fbN);
 
 			if (dS < 1e-9) {
-				status = -1;
 				this.omega = maxomega;
 			}
 			else {

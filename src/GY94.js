@@ -163,9 +163,10 @@ class GY94 extends Base {
 
 
 	/* x[i]=x0[i] + t*p[i] */
-	fun_ls(t, x0, p, x, n) {
-		for (let i = 0; i < n; i++) x[i] = x0[i] + t * p[i];
-		return (this.lfun2dSdN(x, n));
+	fun_ls(t, x0, p, n) {
+		let i, x = new Array(n);
+		for (i = 0; i < n; i++) x[i] = x0[i] + t * p[i];
+		return this.lfun2dSdN(x, n);
 	}
 
 
@@ -174,13 +175,15 @@ class GY94 extends Base {
 		let fpatti, lst = this.com.ls, h, ht, j, k = -1;
 		let gap = 3;
 		let nb = 1;
-		let zt = [], b1 = [0, 0]; /* b[][] data at site h */
+		let zt = new Array(2), b1 = new Array(2); /* b[][] data at site h */
 		let nc = 65;
 
-		fpatti = new Array(lst).fill(0);
+		fpatti = new Array(lst);
+
+		fpatti.fill(0);
 
 		for (j = 0; j < this.com.ns; j++) {
-			zt[j] = new Array(lst).fill(0);
+			zt[j] = new Array(lst);
 		}
 
 		this.com.npatt = 0;
@@ -212,7 +215,7 @@ class GY94 extends Base {
 		}
 
 		for (j = 0; j < this.com.ns; j++) {
-			this.com.z = zt
+			this.com.z[j] = zt[j]
 		}
 
 		return 0;
@@ -220,8 +223,7 @@ class GY94 extends Base {
 
 	preProcess(seq1, seq2) {
 		let i;
-		this.com.kappa = 2;
-		this.com.omega = 0.4;
+		this.com.kappa = 2; this.com.omega = 0.4;
 
 		this.setmark_61_64();
 
@@ -243,8 +245,6 @@ class GY94 extends Base {
 
 	setmark_61_64() {
 		let i, code = GeneticCode[this.com.icode];
-		//int c[3],aa0,aa1, by[3]={16,4,1};
-		//double nSilent, nStop, nRepl;
 
 		this.Nsensecodon = 0;
 		for (i = 0; i < 64; i++) {
@@ -261,7 +261,7 @@ class GY94 extends Base {
 	}
 
 	EncodeSeqs() {
-		let j, h, k, b = new Array(3).fill(0);
+		let j, h, k, b = new Array(3);
 
 		//T C A G to 0 1 2 3
 		for (j = 0; j < this.com.ns; j++) {
@@ -314,37 +314,38 @@ class GY94 extends Base {
 			pi[i] = fb3x4[b[0]] * fb3x4[4 + b[1]] * fb3x4[8 + b[2]];
 		}
 
-		this.scaleArray(1. / this.sumArray(pi, n), pi, n);
+		this.scaleArray(1 / this.sumArray(pi, n), pi, n);
 
 		return pi;
 	}
 
-	gradientB(n, x, f0, g, space, xmark) {
+	gradientB(n, x, f0, xmark) {
 		/* f0=fun(x) is always provided.
 		   xmark=0: central; 1: upper; -1: down
 		*/
 		let i, j;
 		let eh0 = this.Small_Diff, eh;  /* eh0=1e-6 || 1e-7 */
+		let x0 = new Array(n), x1 = new Array(n), g = new Array(n);
 
 		for (i = 0; i < n; i++) {
 			eh = eh0 * (Math.abs(x[i]) + 1);
 			if (xmark[i] == 0 && this.SIZEp < 1) {    //central 
-				for (j = 0; j < n; j++) space[j] = space[j + n] = x[j];
-				eh = Math.pow(eh, .67); space[i] -= eh; space[i + n] += eh;
-				g[i] = (this.lfun2dSdN(space.slice(n), n) - this.lfun2dSdN(space, n)) / (eh * 2.0);
+				for (j = 0; j < n; j++) x0[j] = x1[j] = x[j];
+				eh = Math.pow(eh, .67); x0[i] -= eh; x1[i] += eh;
+				g[i] = (this.lfun2dSdN(x1, n) - this.lfun2dSdN(x0, n)) / (eh * 2);
 			}
 			else {//forward or backward
-				for (j = 0; j < n; j++) space[j + n] = x[j];
+				for (j = 0; j < n; j++) x1[j] = x[j];
 				if (xmark[i]) eh *= -xmark[i];
-				space[i + n] += eh;
-				g[i] = (this.lfun2dSdN(space.slice(n), n) - f0) / eh;
+				x1[i] += eh;
+				g[i] = (this.lfun2dSdN(x1, n) - f0) / eh;
 			}
 		}
-		return (0);
+		return g;
 	}
 
 
-	LineSearch2(f, x0, p, step, limit, e, space, n) {
+	LineSearch2(f, x0, p, step, limit, e, n) {
 		/* linear search using quadratic interpolation 
 		   from x0[] in the direction of p[],
 						x = x0 + a*p        a ~(0,limit)
@@ -359,18 +360,18 @@ class GY94 extends Base {
 		   and is not terribly important.
 		*/
 		let ii = 0, maxround = 10, nsymb = 0;
-		let x = space, factor = 4, small = 1e-6, smallgapa = 0.2;
+		let factor = 4, small = 1e-6, smallgapa = 0.2;
 		let a0, a1, a2, a3, a4 = -1, a5, a6, f0, f1, f2, f3, f4 = -1, f5, f6;
 
 		a0 = a1 = 0; f1 = f0 = f;
 		a2 = a0 + step;
-		f2 = this.fun_ls(a2, x0, p, x, n);
+		f2 = this.fun_ls(a2, x0, p, n);
 		if (f2 > f1) {
 			for (; ;) {
 				step /= factor;
-				if (step < small) return [0, f, x0, p, space];
+				if (step < small) return [0, f];
 				a3 = a2; f3 = f2;
-				a2 = a0 + step; f2 = this.fun_ls(a2, x0, p, x, n);
+				a2 = a0 + step; f2 = this.fun_ls(a2, x0, p, n);
 				if (f2 <= f1) break;
 			}
 		}
@@ -378,7 +379,7 @@ class GY94 extends Base {
 			for (; ;) {
 				step *= factor;
 				if (step > limit) step = limit;
-				a3 = a0 + step; f3 = this.fun_ls(a3, x0, p, x, n);
+				a3 = a0 + step; f3 = this.fun_ls(a3, x0, p, n);
 
 				//obtain a bracket
 				if (f3 >= f2) {	//a1<a2<a3 and f1>f2<f3
@@ -387,7 +388,7 @@ class GY94 extends Base {
 
 				a1 = a2; f1 = f2; a2 = a3; f2 = f3;
 				if (step >= limit) {
-					f = f3; return [a3, f, x0, p, space];
+					f = f3; return [a3, f];
 				}
 			}
 		}
@@ -404,7 +405,7 @@ class GY94 extends Base {
 			if (a4 > a3 || a4 < a1) {//out of range: whether a1<a4<a3
 				a4 = (a1 + a2) / 2;
 			}
-			f4 = this.fun_ls(a4, x0, p, x, n);
+			f4 = this.fun_ls(a4, x0, p, n);
 
 			if (Math.abs(f2 - f4) < e * (1 + Math.abs(f2))) {
 				break;
@@ -417,15 +418,15 @@ class GY94 extends Base {
 				}
 				else {
 					if (f4 > f2) {
-						a5 = (a2 + a3) / 2; f5 = this.fun_ls(a5, x0, p, x, n);
+						a5 = (a2 + a3) / 2; f5 = this.fun_ls(a5, x0, p, n);
 						if (f5 > f2) { a1 = a4; a3 = a5; f1 = f4; f3 = f5; }
 						else { a1 = a2; a2 = a5; f1 = f2; f2 = f5; }
 					}
 					else {
-						a5 = (a1 + a4) / 2; f5 = this.fun_ls(a5, x0, p, x, n);
+						a5 = (a1 + a4) / 2; f5 = this.fun_ls(a5, x0, p, n);
 						if (f5 >= f4) { a3 = a2; a2 = a4; a1 = a5; f3 = f2; f2 = f4; f1 = f5; }
 						else {
-							a6 = (a1 + a5) / 2; f6 = this.fun_ls(a6, x0, p, x, n);
+							a6 = (a1 + a5) / 2; f6 = this.fun_ls(a6, x0, p, n);
 							if (f6 > f5) { a1 = a6; a2 = a5; a3 = a4; f1 = f6; f2 = f5; f3 = f4; }
 							else { a2 = a6; a3 = a5; f2 = f6; f3 = f5; }
 						}
@@ -439,15 +440,15 @@ class GY94 extends Base {
 				}
 				else {
 					if (f4 > f2) {
-						a5 = (a1 + a2) / 2; f5 = this.fun_ls(a5, x0, p, x, n);
+						a5 = (a1 + a2) / 2; f5 = this.fun_ls(a5, x0, p, n);
 						if (f5 > f2) { a1 = a5; a3 = a4; f1 = f5; f3 = f4; }
 						else { a3 = a2; a2 = a5; f3 = f2; f2 = f5; }
 					}
 					else {
-						a5 = (a3 + a4) / 2; f5 = this.fun_ls(a5, x0, p, x, n);
+						a5 = (a3 + a4) / 2; f5 = this.fun_ls(a5, x0, p, n);
 						if (f5 >= f4) { a1 = a2; a2 = a4; a3 = a5; f1 = f2; f2 = f4; f3 = f5; }
 						else {
-							a6 = (a3 + a5) / 2; f6 = this.fun_ls(a6, x0, p, x, n);
+							a6 = (a3 + a5) / 2; f6 = this.fun_ls(a6, x0, p, n);
 							if (f6 > f5) { a1 = a4; a2 = a5; a3 = a6; f1 = f4; f2 = f5; f3 = f6; }
 							else { a1 = a5; a2 = a6; f1 = f5; f2 = f6; }
 						}
@@ -460,12 +461,12 @@ class GY94 extends Base {
 		if (f2 <= f4) { f = f2; a4 = a2; }
 		else f = f4;
 
-		return [a4, f, x0, p, space];
+		return [a4, f];
 	}
 
 	distance(x, y, n) {
 		let i, t = 0;
-		for (i = 0; i < n; i++) t += square(x[i] - y[i]);
+		for (i = 0; i < n; i++) t += (x[i] - y[i]) ** 2;
 		return Math.sqrt(t);
 	}
 
@@ -477,18 +478,18 @@ class GY94 extends Base {
 		if ((r = this.norm(x0, n)) < e2) r = 1;
 		r *= e1;
 		if (this.distance(x1, x0, n) >= r)
-			return 0;
+			return false;
 
 		r = Math.abs(f0);
 		if (r < e2) r = 1;
 		r *= e1;
 		if (Math.abs(f1 - f0) >= r)
-			return 0;
+			return false;
 
-		return 1;
+		return true;
 	}
 
-	ming2(f, x, xb, e, n) {
+	ming2(x, xb, e, n) {
 		/* n-variate minimization with bounds using the BFGS algorithm
 			g0[n] g[n] p[n] x0[n] y[n] s[n] z[n] H[n*n] C[n*n] tv[2*n]
 			xmark[n],ix[n]
@@ -499,23 +500,22 @@ class GY94 extends Base {
 			x[] has initial values at input and returns the estimates in return.
 			ix[i] specifies the i-th free parameter
 		*/
-		let i, j, i1, i2, it, maxround = 2000, fail = 0, xmark, ix, nfree;
+		let i, j, i1, i2, it, maxround = 200, fail = 0, xmark, ix, nfree;
 		let Ngoodtimes = 2, goodtimes = 0;
 		let small = 1e-6, sizep0 = 0;
-		let f0, g0, g, p, x0, y, s, z, H, C, tv;
+		let f, f0, g0, g, p, x0, y, s, z, H, C;
 		let w, v, alpha, am, h, maxstep = 8;
 
-		if (n == 0) return [f, x, xb];
+		if (n == 0) return [f, x];
 
 		g0 = new Array(n).fill(0); g = new Array(n).fill(0); x0 = new Array(n).fill(0);
 		y = new Array(n).fill(0); s = new Array(n).fill(0); z = new Array(n).fill(0); H = new Array(n * n).fill(0);
-		C = new Array(n * n).fill(0); tv = new Array(2 * n).fill(0);
+		C = new Array(n * n).fill(0);
+		xmark = new Array(n);
+		ix = new Array(n);
 
-		xmark = new Array(n).fill(0);
-		ix = new Array(n).fill(0);
-
+		xmark.fill(0);
 		for (i = 0; i < n; i++) {
-			xmark[i] = 0;
 			ix[i] = i;
 		}
 
@@ -539,7 +539,7 @@ class GY94 extends Base {
 		x0 = x.map(x => x);
 		this.SIZEp = 999;
 
-		this.gradientB(n, x0, f0, g0, tv, xmark);
+		g0 = this.gradientB(n, x0, f0, xmark);
 
 		this.initIdentityMatrix(H, nfree);
 
@@ -567,28 +567,27 @@ class GY94 extends Base {
 				h = max2(h, am / 500);
 			}
 			h = max2(h, 1e-5); h = min2(h, am / 5);
-			f = f0;
-			[alpha, f, x0, p, tv] = this.LineSearch2(f, x0, p, h, am, min2(1e-3, e), tv, n); /* n or nfree? */
+			[alpha, f] = this.LineSearch2(f0, x0, p, h, am, min2(1e-3, e), n); /* n or nfree? */
 
 			fail = 0;
-			for (i = 0; i < n; i++)  x[i] = x0[i] + alpha * p[i];
+			for (i = 0; i < n; i++)
+				x[i] = x0[i] + alpha * p[i];
 
 			w = min2(2, e * 1000);
 			if (e < 1e-4 && e > 1e-6)
 				w = 0.01;
 
-			if (this.Iround == 0 || this.SIZEp < sizep0 || (this.SIZEp < .001 && sizep0 < .001))
+			if (this.Iround == 0 || this.SIZEp < sizep0 || (this.SIZEp < .002 && sizep0 < .002))
 				goodtimes++;
 			else
 				goodtimes = 0;
-			if ((n == 1 || goodtimes >= Ngoodtimes) && this.SIZEp < (e > 1e-5 ? .05 : .001) && (f0 - f < 0.001) && this.H_end(x0, x, f0, f, e, e, n))
+			if ((n == 1 || goodtimes >= Ngoodtimes) && this.SIZEp < (e > 1e-5 ? .05 : .002) && f0 - f < 0.001 && this.H_end(x0, x, f0, f, e, e, n))
 				break;
 
-			this.gradientB(n, x, f, g, tv, xmark);
+			g = this.gradientB(n, x, f, xmark);
 
 			/* modify the working set */
 			for (i = 0; i < n; i++) {         /* add constraints, reduce H */
-
 				if (xmark[i])
 					continue;
 
@@ -600,7 +599,7 @@ class GY94 extends Base {
 				if (xmark[i] == 0)
 					continue;
 
-				C = H;
+				C = H.map(x => x);
 				for (it = 0; it < nfree; it++)
 					if (ix[it] == i)
 						break;
@@ -621,7 +620,7 @@ class GY94 extends Base {
 			}
 
 			if (w > 10 * this.SIZEp / nfree) {
-				C = H;
+				C = H.map(x => x);
 
 				for (i1 = 0; i1 < nfree; i1++) {
 					for (i2 = 0; i2 < nfree; i2++) {
@@ -670,7 +669,7 @@ class GY94 extends Base {
 
 		f = this.lfun2dSdN(x, n);
 
-		return [f, x, xb];
+		return [f, x];
 	}
 
 
@@ -927,35 +926,35 @@ class GY94 extends Base {
 
 		kappa[5] = 1.0;		//Substitution rate between C and A
 
-		if (this.model == "JC" || this.model == "F81") {
+		if (model == "JC" || model == "F81") {
 			//Q[i*n+j] = kappa[0] = 1;
 			kappa[0] = kappa[1] = kappa[2] = kappa[3] = kappa[4] = kappa[5];
 		}
-		else if (this.model == "K2P" || this.model == "HKY") {//one para.
+		else if (model == "K2P" || model == "HKY") {//one para.
 			//if ((b1+b2)==1 || (b1+b2)==5) Q[i*n+j] = kappa[0];
 			kappa[1] = kappa[0];
 			kappa[2] = kappa[3] = kappa[4] = kappa[5];
 		}
-		else if (this.model == "TNEF" || this.model == "TN") {//two para.
+		else if (model == "TNEF" || model == "TN") {//two para.
 			//if ((b1+b2)==1)  Q[i*n+j] = kappa[0];
 			//else if ((b1+b2)==5)  Q[i*n+j] = kappa[1];
 			kappa[2] = kappa[3] = kappa[4] = kappa[5];
 		}
-		else if (this.model == "K3P" || this.model == "K3PUF") {//two para.
+		else if (model == "K3P" || model == "K3PUF") {//two para.
 			//if ((b1+b2)==1 || (b1+b2)==5)  Q[i*n+j] = kappa[0];
 			//else if ((b1+b2)==2 || (b1+b2)==4) Q[i*n+j] = kappa[1];
 			kappa[4] = kappa[5];
 			kappa[2] = kappa[3] = kappa[1];
 			kappa[1] = kappa[0];
 		}
-		else if (this.model == "TIMEF" || this.model == "TIM") {//three para.
+		else if (model == "TIMEF" || model == "TIM") {//three para.
 			//if ((b1+b2)==1) Q[i*n+j] = kappa[0];
 			//else if ((b1+b2)==5)  Q[i*n+j] = kappa[1];
 			//else if ((b1+b2)==2 || (b1+b2)==4) Q[i*n+j] = kappa[2];
 			kappa[4] = kappa[5];
 			kappa[3] = kappa[2];
 		}
-		else if (this.model == "TVMEF" || this.model == "TVM") {//four para.
+		else if (model == "TVMEF" || model == "TVM") {//four para.
 			//if ((b1+b2)==1 || (b1+b2)==5)  Q[i*n+j] = kappa[0];
 			//else if ((b1+b2)==2) Q[i*n+j] = kappa[1];
 			//else if ((b1+b2)==4) Q[i*n+j] = kappa[2];
@@ -968,7 +967,7 @@ class GY94 extends Base {
 			kappa[2] = kappa[1];
 			kappa[1] = kappa[0];
 		}
-		else if (this.model == "SYM" || this.model == "GTR") {//five para.
+		else if (model == "SYM" || model == "GTR") {//five para.
 		}
 		else {
 			return 0;
@@ -1013,7 +1012,7 @@ class GY94 extends Base {
 		//Equal codon frequency
 		if (this.model == "JC" || this.model == "K2P" || this.model == "TNEF" || this.model == "K3P" ||
 			this.model == "TIMEF" || this.model == "TVMEF" || this.model == "SYM") {
-			pi = this.com.pi = new Array(64).fill(1.0 / (64 - this.getNumNonsense(genetic_code)));
+			pi = this.com.pi = new Array(64).fill(1 / (64 - this.getNumNonsense(genetic_code)));
 		}
 
 		//Parse substitution rates according to the given model
@@ -1090,7 +1089,7 @@ class GY94 extends Base {
 				dS = blength * rs / (3 * rs0);
 				dN = blength * ra / (3 * ra0);
 			}
-			return [S, dS, dN, Q];
+			return [S, dS, dN];
 		}
 		else {
 			for (i = 0; i < n; i++) Q[i * n + i] = -this.sumArray(Q.slice(i * n), n);
@@ -1098,7 +1097,7 @@ class GY94 extends Base {
 			[Root, U, V] = this.eigenQREV(Q, this.com.pi, n, space_pisqrt);
 
 			for (i = 0; i < n; i++) Root[i] /= mr;
-			return [Root, U, V, Q];
+			return [Root, U, V];
 		}
 	}
 
@@ -1124,7 +1123,7 @@ class GY94 extends Base {
 
 		this.com.omega = x[1 + this.com.nkappa];
 
-		let [Root, U, V, PMat] = this.EigenQc(0, -1, pkappa, this.com.omega);
+		let [Root, U, V] = this.EigenQc(0, -1, pkappa, this.com.omega);
 
 		//t = x[0],  exp(Qt)
 		for (k = 0; k < n; k++) {
@@ -1163,7 +1162,7 @@ class GY94 extends Base {
 		let x = [.3, 1, .5, .5, .5, .5, .3, 0, 0, 0],
 			xb = [[1e-6, 3], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]];
 		let kappab = [.01, 30], omegab = [0.001, 50];
-		let e = 1e-6, dS, dN, PMat;
+		let e = 1e-6, dS, dN;
 		let pkappa = this.com.KAPPA;
 
 		fpatt0 = new Array(npatt0 * 3);
@@ -1209,7 +1208,6 @@ class GY94 extends Base {
 		}
 
 		this.com.pi = this.GetCodonFreqs(this.com.pi);
-
 		/* initial values and bounds */
 		//divergence time t
 		x[0] = -1;
@@ -1230,9 +1228,9 @@ class GY94 extends Base {
 
 		if ((this.snp / length) > 1e-6) x[0] = 3.0 * this.snp / length;
 
-		[this.lnL, x, xb] = this.ming2(this.lnL, x, xb, e, this.com.np);
+		[this.lnL, x] = this.ming2(x, xb, e, this.com.np);
 
-		[this.S, dS, dN, PMat] = this.EigenQc(1, x[0], pkappa, this.com.omega);
+		[this.S, dS, dN] = this.EigenQc(1, x[0], pkappa, this.com.omega);
 
 		this.Ka = dN;
 		this.Ks = dS;

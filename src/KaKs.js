@@ -92,16 +92,15 @@ class KAKS extends Base {
 	*****************************************************/
 	ReadCalculateSeq(data) {
 		this.showParaInfo();
-		let res = this.getTitleInfo();
+		this.result = this.getTitleInfo();
 		for (let seqs of data.trim().split(/\n{2,}/)) {
 			let name = seqs.substr(0, seqs.indexOf('\n'));
 			let str = seqs.substr(seqs.indexOf('\n') + 1).replace(/\n/g, "");
 			this.getGCContent(str);
 			this.checkValid(name, str.substr(0, str.length / 2), str.substr(str.length / 2, str.length / 2));
-			res += this.calculateKaKs();
+			this.calculateKaKs();
 			console.log(name + " [OK]");
 		}
-		return res
 	}
 
 	/**************************************************
@@ -150,14 +149,14 @@ class KAKS extends Base {
 
 		let time_start = new Date()
 		this.parseParameter(argv)
-		let res = this.ReadCalculateSeq(data)
+		this.ReadCalculateSeq(data)
 		//Time used for running
 		let t = (new Date() - time_start) / 1000 | 0;
 		let h = t / 3600 | 0, m = (t % 3600) / 60 | 0, s = t - (t / 60 | 0) * 60;
 
 		//Print on display
 		console.log("Mission accomplished. (Time elapsed:" + (h ? h + ":" : "") + m + ":" + s + ")");
-		return res
+		return this.result
 	}
 
 
@@ -249,7 +248,7 @@ class KAKS extends Base {
 
 		if (this.gmyn || this.gng86 || this.gyn00 || this.glwl85 || this.gmlwl85 || this.glpb93 || this.gmlpb93) {
 
-			let fka, fks, fkaks, temp = 0;
+			let fka, fks, fkaks = 0, temp = 0;
 			let tresult;
 			tresult = this.result;
 			if (temp == 0) {
@@ -270,86 +269,79 @@ class KAKS extends Base {
 			k = 1;
 			while ((j = linecontent.indexOf('\t')) > 0) {
 				let temp = linecontent.substr(0, j);
-				while ((j = linecontent.indexOf('\t')) > 0) {
-					let temp = linecontent.substr(0, j);
 
-					if (k == 3) {
-						fka = +temp;
-					}
-					if (k == 4) {
-						fks = +temp;
-					}
-					if (k == 5) {
-						fkaks = +temp;
-						//goto att;
-					}
-
-					linecontent = linecontent.substr(j + 1);
-					k++;
+				if (k == 3) {
+					fka = +temp;
 				}
-				//	}
-
-				if ((!this.myn) && (!this.ng86) && (!this.lwl85) && (!this.mlwl85) && (!this.lpb93) && (!this.mlpb93) && (!this.yn00) && (!this.gy94) && (!this.ms) && (!this.ma)) {
-					if (this.tempt == 0) {
-						this.result = this.items.join("");//for Gamma choices result delete the first line 
-						//Linux version don't need this line
-						this.tempt++;
-					} else {
-						this.result = "";//for Gamma choices result delete the first line 
-					}
-
-
-
-					if (this.gy94) this.start_GY94(-1);
-					if (this.ms || this.ma) this.start_MSMA(-1);
-
+				if (k == 4) {
+					fks = +temp;
+				}
+				if (k == 5) {
+					fkaks = +temp;
+					//goto att;
 				}
 
-				if (fkaks < 1) {
-					//	result="";
-					//Estimate Ka and Ks
-					if (this.none) this.start_NONE(-1);
-					if (this.gng86) this.start_NG86(-1);
-					if (this.glwl85) this.start_LWL85(-1);
-					if (this.gmlwl85) this.start_MLWL85(4);
-					if (this.glpb93) this.start_LPB93(1);
-					if (this.gmlpb93) this.start_MLPB93(1);
-					//	if (this.gy94)	this.start_GY94(0);
-					if (this.gyn00) this.start_YN00(4);
-					if (this.gmyn) this.start_MYN(20);
+				linecontent = linecontent.substr(j + 1);
+				k++;
+			}
+			//	}
 
-					//	if (this.ms||this.ma)	this.start_MSMA(0);
-				} else if (fkaks > 1) {
-
-					//	result="";
-					//Estimate Ka and Ks
-					if (this.none) this.start_NONE(-1);
-					if (this.gng86) this.start_NG86(6);
-					if (this.glwl85) this.start_LWL85(0.2);
-					if (this.gmlwl85) this.start_MLWL85(0.6);
-					if (this.glpb93) this.start_LPB93(1);
-					if (this.gmlpb93) this.start_MLPB93(1);
-					//	if (this.gy94)	this.start_GY94(0);
-					if (this.gyn00) this.start_YN00(-1);
-					if (this.gmyn) this.start_MYN(-1);
-
-					//	if (this.ms||this.ma)	this.start_MSMA(0);
-				} else if (fkaks == 1) {
-					if (this.none) this.start_NONE(-1);
-					if (this.gng86) this.start_NG86(-1);
-					if (this.glwl85) this.start_LWL85(-1);
-					if (this.gmlwl85) this.start_MLWL85(-1);
-					if (this.glpb93) this.start_LPB93(-1);
-					if (this.gmlpb93) this.start_MLPB93(-1);
-					//	if (this.gy94)	this.start_GY94(-1);
-					if (this.gyn00) this.start_YN00(-1);
-					if (this.gmyn) this.start_MYN(-1);
-					//	if (this.ms||this.ma)	this.start_MSMA(-1);
+			if ((!this.myn) && (!this.ng86) && (!this.lwl85) && (!this.mlwl85) && (!this.lpb93) && (!this.mlpb93) && (!this.yn00) && (!this.gy94) && (!this.ms) && (!this.ma)) {
+				if (this.tempt == 0) {
+					// this.result = this.getTitleInfo();//for Gamma choices result delete the first line 
+					//Linux version don't need this line
+					this.tempt++;
+				} else {
+					this.result = "";//for Gamma choices result delete the first line 
 				}
+				if (this.gy94) this.start_GY94(-1);
+				if (this.ms || this.ma) this.start_MSMA(-1);
 
 			}
+
+			if (fkaks < 1) {
+				//	result="";
+				//Estimate Ka and Ks
+				if (this.none) this.start_NONE(-1);
+				if (this.gng86) this.start_NG86(-1);
+				if (this.glwl85) this.start_LWL85(-1);
+				if (this.gmlwl85) this.start_MLWL85(4);
+				if (this.glpb93) this.start_LPB93(1);
+				if (this.gmlpb93) this.start_MLPB93(1);
+				//	if (this.gy94)	this.start_GY94(0);
+				if (this.gyn00) this.start_YN00(4);
+				if (this.gmyn) this.start_MYN(20);
+
+				//	if (this.ms||this.ma)	this.start_MSMA(0);
+			} else if (fkaks > 1) {
+
+				//	result="";
+				//Estimate Ka and Ks
+				if (this.none) this.start_NONE(-1);
+				if (this.gng86) this.start_NG86(6);
+				if (this.glwl85) this.start_LWL85(0.2);
+				if (this.gmlwl85) this.start_MLWL85(0.6);
+				if (this.glpb93) this.start_LPB93(1);
+				if (this.gmlpb93) this.start_MLPB93(1);
+				//	if (this.gy94)	this.start_GY94(0);
+				if (this.gyn00) this.start_YN00(-1);
+				if (this.gmyn) this.start_MYN(-1);
+
+				//	if (this.ms||this.ma)	this.start_MSMA(0);
+			} else if (fkaks == 1) {
+				if (this.none) this.start_NONE(-1);
+				if (this.gng86) this.start_NG86(-1);
+				if (this.glwl85) this.start_LWL85(-1);
+				if (this.gmlwl85) this.start_MLWL85(-1);
+				if (this.glpb93) this.start_LPB93(-1);
+				if (this.gmlpb93) this.start_MLPB93(-1);
+				//	if (this.gy94)	this.start_GY94(-1);
+				if (this.gyn00) this.start_YN00(-1);
+				if (this.gmyn) this.start_MYN(-1);
+				//	if (this.ms||this.ma)	this.start_MSMA(-1);
+			}
+
 		}
-		return this.result
 	}
 	start_NONE(GAMMA) {
 		let zz = new NONE()
@@ -454,8 +446,6 @@ class KAKS extends Base {
 		info.push(methods.join(" "));
 		info.push("Genetic code:" + transl_table[2 * (genetic_code - 1) + 1])
 		info.push("Please wait while reading sequences and calculating...")
-
-		console.log(info.join("\n"))
 	}
 
 	/************************************************

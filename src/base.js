@@ -338,44 +338,44 @@ class Base {
 		//Method name
 		result.push(this.name)
 		//Ka
-		result.push(this.Ka < SMALLVALUE ? "NA" : this.Ka)
+		result.push(this.Ka < SMALLVALUE ? "NA" : +this.Ka.toExponential(5))
 		//Ks
-		result.push(this.Ks < SMALLVALUE ? "NA" : this.Ks)
+		result.push(this.Ks < SMALLVALUE ? "NA" : +this.Ks.toExponential(5))
 		//Ka/Ks
-		result.push(this.Ks < SMALLVALUE || this.Ks == NA || this.Ka == NA ? "NA" : this.Ka / this.Ks);
+		result.push(this.Ks < SMALLVALUE || this.Ks == NA || this.Ka == NA ? "NA" : +(this.Ka / this.Ks).toExponential(5));
 		//Fisher's test: p_value
-		result.push(this.Sd < SMALLVALUE || this.Nd < SMALLVALUE || this.S < SMALLVALUE || this.N < SMALLVALUE ? "NA" : this.fisher(this.Sd, this.Nd, this.S - this.Sd, this.N - this.Nd));
+		result.push(this.Sd < SMALLVALUE || this.Nd < SMALLVALUE || this.S < SMALLVALUE || this.N < SMALLVALUE ? "NA" : +this.fisher(this.Sd, this.Nd, this.S - this.Sd, this.N - this.Nd).toExponential(5));
 		//Length of compared pairwise sequences
 		result.push(length)
 		//Synonymous(S) sites
-		result.push(this.S < SMALLVALUE ? "NA" : this.S)
+		result.push(this.S < SMALLVALUE ? "NA" : +this.S.toExponential(5))
 		//Nonsynonymous(N) sites
-		result.push(this.N < SMALLVALUE ? "NA" : this.N)
+		result.push(this.N < SMALLVALUE ? "NA" : +this.N.toExponential(5))
 		//L[0], L[2], L[4] only for Prof.Li's series(LWL85, LPB93...)
-		result.push(this.L[0] < SMALLVALUE && this.L[2] < SMALLVALUE && this.L[4] < SMALLVALUE ? "NA" : [this.L[0], this.L[2], this.L[4]].join(":"))
+		result.push(this.L[0] < SMALLVALUE && this.L[2] < SMALLVALUE && this.L[4] < SMALLVALUE ? "NA" : [+this.L[0].toExponential(5), +this.L[2].toExponential(5), +this.L[4].toExponential(5)].join(":"))
 		//Substitutions
 		result.push(this.snp)
 		//Sysnonymous Substitutions(Sd)
-		result.push(this.Sd < SMALLVALUE ? "NA" : this.Sd)
+		result.push(this.Sd < SMALLVALUE ? "NA" : +this.Sd.toExponential(5))
 		//Nonsysnonymous Substitutions(Nd)
-		result.push(this.Nd < SMALLVALUE ? "NA" : this.Nd)
+		result.push(this.Nd < SMALLVALUE ? "NA" : +this.Nd.toExponential(5))
 
 		//Si for Li's series' methods(LWL85, LPB93...)
-		result.push(this.Si[0] < SMALLVALUE && this.Si[2] < SMALLVALUE && this.Si[4] < SMALLVALUE ? "NA" : [this.Si[0], this.Si[2], this.Si[4]].join(":"))
+		result.push(this.Si[0] < SMALLVALUE && this.Si[2] < SMALLVALUE && this.Si[4] < SMALLVALUE ? "NA" : [+this.Si[0].toExponential(5), +this.Si[2].toExponential(5), +this.Si[4].toExponential(5)].join(":"))
 
 		//Vi for Li's series' methods(LWL85, LPB93...)
-		result.push(this.Vi[0] < SMALLVALUE && this.Vi[2] < SMALLVALUE && this.Vi[4] < SMALLVALUE ? "NA" : [this.Vi[0], this.Vi[2], this.Vi[4]].join(":"))
+		result.push(this.Vi[0] < SMALLVALUE && this.Vi[2] < SMALLVALUE && this.Vi[4] < SMALLVALUE ? "NA" : [+this.Vi[0].toExponential(5), +this.Vi[2].toExponential(5), +this.Vi[4].toExponential(5)].join(":"))
 		//Divergence time or distance t = (S*Ks+N*Ka)/(S+N)
-		result.push(this.t < SMALLVALUE ? "NA" : this.t)
+		result.push(this.t < SMALLVALUE ? "NA" : +this.t.toExponential(5))
 		//Substitution-Rate-Ratio(rTC:rAG:rTA:rCG:rTG:rCA/rCA)
-		result.push(this.KAPPA.join(":"))
+		result.push(this.KAPPA.map(x=>+x.toExponential(5)).join(":"))
 		//GC Content
-		result.push(GC[0] + "(" + GC.slice(1, 4).join(":") + ")")
+		result.push(+GC[0].toExponential(5) + "(" + GC.map(x=>+x.toExponential(5)).slice(1, 4).join(":") + ")")
 
 		//Maximum Likelihood Value
-		result.push(this.lnL == NA ? "NA" : this.lnL);
+		result.push(this.lnL == NA ? "NA" : +this.lnL.toExponential(5));
 		//AICc
-		result.push(this.AICc == NA ? "NA" : this.AICc);
+		result.push(this.AICc == NA ? "NA" : +this.AICc.toExponential(5));
 		//Akaike weight in model selection
 		result.push(this.AkaikeWeight == NA ? "NA" : this.AkaikeWeight);
 		//Selected Model according to AICc

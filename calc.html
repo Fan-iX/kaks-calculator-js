@@ -32,9 +32,9 @@ ATGGACATTGAAGCATATTTTGAAAGAATTGGCTATAAGAACTCTAGGAACAAATTGGACTTGGAAACATTAACTGACAT
 ATGGACATCGAAGCATACTTTGAAAGGATTGGTTACAAGAACTCAGTGAATAAATTGGACTTAGCCACATTAACTGAAGTTCTTCAGCACCAGATGCGAGCAGTTCCTTTTGAGAATCTTAACATGCATTGTGGAGAAGCCATGCATCTGGATTTACAGGACATTTTTGACCACATAGTAAGGAAGAAGAGAGGTGGATGGTGTCTCCAGGTTAATCATCTGCTGTACTGGGCTCTGACCAAAATGGGCTTTGAAACCACAATGTTGGGAGGATATGTTTACATAACTCCAGTCAGCAAATATAGCAGTGAAATGGTCCACCTTCTAGTACAGGTGACCATCAGTGACAGGAAGTACATTGTGGATTCCGCCTATGGAGGCTCCTACCAGATGTGGGAGCCTCTGGAATTAACATCTGGGAAGGATCAGCCTCAGGTGCCTGCCATCTTCCTTTTGACAGAGGAGAATGGAACCTGGTACTTGGACCAAATCAGAAGAGAGCAGTATGTTCCAAATGAAGAATTTGTTAACTCAGACCTCCTTGAAAAGAACAAATATCGAAAAATCTACTCCTTTACTCTTGAGCCCCGAGTTATCGAGGATTTTGAATATGTGAATAGCTATCTTCAGACATCGCCAGCATCTGTGTTTGTAAGCACATCGTTCTGTTCCTTGCAGACCTCGGAAGGGGTTCACTGTTTAGTGGGCTCCACCTTTACAAGTAGGAGATTCAGCTATAAGGACGATGTAGATCTGGTTGAGTTTAAATATGTGAATGAGGAAGAAATAGAAGATGTACTGAAAACCGCATTTGGCATTTCTTTGGAGAGAAAGTTTGTGCCCAAACATGGTGAACTAGTTTTTACTATT
 </textarea>
     <div>
-        <select id="code" value="1">
-            <option value="1">1-Standard Code </option>
-            <option value="2">2-Vertebrate Mitochondrial Code</option>
+        <select id="code">
+            <option value="1" selected>1-Standard Code </option>
+            <option value="2" >2-Vertebrate Mitochondrial Code</option>
             <option value="3">3-Yeast Mitochondrial Code </option>
             <option value="4">4-Mold Mitochondrial Code</option>
             <option value="5">5-Invertebrate Mitochondrial Code </option>
@@ -51,25 +51,24 @@ ATGGACATCGAAGCATACTTTGAAAGGATTGGTTACAAGAACTCAGTGAATAAATTGGACTTAGCCACATTAACTGAAGT
             <option value="22">22-Scenedesmus obliquus mitochondrial Code</option>
             <option value="23">23-Thraustochytrium Mitochondrial Code</option>
         </select>
-        <select id="model" value="GMYN">
+        <select id="method">
             <option value="NG">NG</option>
-            <option value="LWL">LWL</option>
+            <option value="LWL" >LWL</option>
             <option value="LPB">LPB</option>
-            <option value="MLWL">MLWL</option>
+            <option value="MLWL" >MLWL</option>
             <option value="MLPB">MLPB</option>
-            <option value="GY">GY</option>
-            <option value="YN">YN</option>
-            <option value="MYN">MYN</option>
+            <option value="GY" selected>GY</option>
+            <option value="YN" >YN</option>
+            <option value="MYN" >MYN</option>
             <option value="MS">MS</option>
             <option value="MA">MA</option>
             <option value="GNG">GNG</option>
             <option value="GLWL">GLWL</option>
             <option value="GLPB">GLPB</option>
-            <option value="GMLWL">GMLWL</option>
+            <option value="GMLWL" >GMLWL</option>
             <option value="GMLPB">GMLPB</option>
             <option value="GYN">GYN</option>
             <option value="GMYN">GMYN</option>
-            <option value="GMYN">ALL</option>
         </select>
         <button onclick="calc()">Calculate Ka/Ks</button>
     </div>
@@ -90,10 +89,11 @@ ATGGACATCGAAGCATACTTTGAAAGGATTGGTTACAAGAACTCAGTGAATAAATTGGACTTAGCCACATTAACTGAAGT
         let kk = new KAKS()
         document.getElementById("output").value = kk.Run(
             document.getElementById("input").value,
-            ["-C", document.getElementById("code").value, "-M", document.getElementById("model").value]
+            ["-C", document.getElementById("code").value, "-M", document.getElementById("method").value]
         )
     }
-    // calc()
+    calc()
 </script>
 
 </html>
+ 
