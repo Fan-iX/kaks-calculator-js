@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaKs test</title>
+    <style>
+        body,
+        .test-group,
+        .flex.v {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .output {
+            flex: 1;
+        }
+
+        .input {
+            overflow-x: auto;
+            margin-bottom: 0;
+            grid-column: span 3;
+        }
+
+        .param {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: 1fr auto;
+        }
+
+        .test-group {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-template-rows: auto 10em;
+        }
+
+        .code {
+            grid-column: span 3;
+            width: 14em;
+        }
+
+        select[multiple] {
+            overflow-y: auto;
+        }
+
+        .output {
+            font-family: monospace;
+            overflow: auto;
+        }
+
+        .output>table {
+            text-wrap: nowrap;
+            border-collapse: collapse;
+        }
+
+        .output>table td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-group">
+        <pre
+            class="input">Human_beta-Mouse_beta
+ATGGTGCATCTGACTCCTGAGGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAGGTGAACGTGGATGAAGTTGGTGGTGAGGCCCTGGGCAGGCTGCTGGTGGTCTACCCTTGGACCCAGAGGTTCTTTGAGTCCTTTGGGGATCTGTCCACTCCTGATGCTGTTATGGGCAACCCTAAGGTGAAGGCTCATGGCAAGAAAGTGCTCGGTGCCTTTAGTGATGGCCTGGCTCACCTGGACAACCTCAAGGGCACCTTTGCCACACTGAGTGAGCTGCACTGTGACAAGCTGCACGTGGATCCTGAGAACTTCAGGCTCCTGGGCAACGTGCTGGTCTGTGTGCTGGCCCATCACTTTGGCAAAGAATTCACCCCACCAGTGCAGGCTGCCTATCAGAAAGTGGTGGCTGGTGTGGCTAATGCCCTGGCCCACAAGTATCACTAA
+ATGGTGCACCTGACTGATGCTGAGAAGGCTGCTGTCTCTTGCCTGTGGGGAAAGGTGAACTCCGATGAAGTTGGTGGTGAGGCCCTGGGCAGGCTGCTGGTTGTCTACCCTTGGACCCAGCGGTACTTTGATAGCTTTGGAGACCTATCCTCTGCCTCTGCTATCATGGGTAATGCCAAAGTGAAGGCCCATGGCAAGAAGGTGATAACTGCCTTTAACGATGGCCTGAATCACTTGGACAGCCTCAAGGGCACCTTTGCCAGCCTCAGTGAGCTCCACTGTGACAAGCTGCATGTGGATCCTGAGAACTTCAGGCTCCTGGGCAATATGATCGTGATTGTGCTGGGCCACCACCTGGGCAAGGATTTCACCCCCGCTGCACAGGCTGCCTTCCAGAAGGTGGTGGCTGGAGTGGCCACTGCCCTGGCTCACAAGTACCACTAA</pre>
+        <div class="param">
+            <select class="method" size="8" multiple disabled>
+                <option selected value="NG">NG</option>
+                <option selected value="LWL">LWL</option>
+                <option selected value="MLWL">MLWL</option>
+                <option selected value="LPB">LPB</option>
+                <option selected value="MLPB">MLPB</option>
+                <option selected value="YN">YN</option>
+                <option selected value="MYN">MYN</option>
+                <option -selected value="GY">GY</option>
+                <option -selected value="MA">MA</option>
+            </select>
+            <select class="model modelef" multiple disabled>
+                <option -selected title="rTC==rAG==rTA==rCG==rTG==rCA; equal pi" value="JC">JC</option>
+                <option -selected title="rTC==rAG!=rTA==rCG==rTG==rCA; equal pi" value="K2P">K2P</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG==rTG==rCA; equal pi" value="TNEF">TNEF</option>
+                <option -selected title="rTC==rAG!=rTA==rCG!=rTG==rCA; equal pi" value="K3P">K3P</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG!=rTG==rCA; equal pi" value="TIMEF">TIMEF</option>
+                <option -selected title="rTC==rAG!=rTA!=rCG!=rTG!=rCA; equal pi" value="TVMEF">TVMEF</option>
+                <option -selected title="rTC!=rAG!=rTA!=rCG!=rTG!=rCA; equal pi" value="SYM">SYM</option>
+            </select>
+            <select class="model modeluf" multiple disabled>
+                <option -selected title="rTC==rAG==rTA==rCG==rTG==rCA; unequal pi" value="F81">F81</option>
+                <option -selected title="rTC==rAG!=rTA==rCG==rTG==rCA; unequal pi" value="HKY">HKY</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG==rTG==rCA; unequal pi" value="TN">TN</option>
+                <option -selected title="rTC==rAG!=rTA==rCG!=rTG==rCA; unequal pi" value="K3PUF">K3PUF</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG!=rTG==rCA; unequal pi" value="TIM">TIM</option>
+                <option -selected title="rTC==rAG!=rTA!=rCG!=rTG!=rCA; unequal pi" value="TVM">TVM</option>
+                <option -selected title="rTC!=rAG!=rTA!=rCG!=rTG!=rCA; unequal pi" value="GTR">GTR</option>
+            </select>
+            <select class="code" disabled>
+                <option value="1">1-Standard</option>
+                <option value="2">2-Vertebrate Mitochondrial</option>
+                <option value="3">3-Yeast Mitochondrial</option>
+                <option value="4">4-Mold Mitochondrial</option>
+                <option value="5">5-Invertebrate Mitochondrial</option>
+                <option value="6">6-Ciliate, Dasycladacean and Hexamita</option>
+                <option value="9">9-Echinoderm and Flatworm Mitochondrial</option>
+                <option value="10">10-Euplotid Nuclear</option>
+                <option value="11">11-Bacterial and Plant Plastid</option>
+                <option value="12">12-Alternative Yeast Nuclear</option>
+                <option value="13">13-Ascidian Mitochondrial</option>
+                <option value="14">14-Alternative Flatworm Mitochondrial</option>
+                <option value="15">15-Blepharisma Nuclear</option>
+                <option value="16">16-Chlorophycean Mitochondrial</option>
+                <option value="21">21-Trematode Mitochondrial</option>
+                <option value="22">22-Scenedesmus obliquus mitochondrial</option>
+                <option value="23">23-Thraustochytrium Mitochondrial</option>
+                <option value="24">24-Rhabdopleuridae Mitochondrial</option>
+                <option value="25">25-Candidate Division SR1 and Gracilibacteria</option>
+                <option value="26">26-Pachysolen tannophilus Nuclear</option>
+                <option value="27">27-Karyorelict Nuclear</option>
+                <option value="28">28-Condylostoma Nuclear</option>
+                <option value="29">29-Mesodinium Nuclear</option>
+                <option value="30">30-Peritrich Nuclear</option>
+                <option value="31">31-Blastocrithidia Nuclear</option>
+                <option value="33">33-Cephalodiscidae Mitochondrial UAA-Tyr</option>
+            </select>
+        </div>
+        <div class="output"></div>
+    </div>
+    <div class="test-group">
+        <pre class="input">YP_009497836.1-NP_040703.1(gene A)
+ATGTTTAAA------------------GTACATTCTGACTACTTCAGCAAACCTAACATCGACGCAATCAAACCTCTCGTCGAAACTGCTGGTATGTCTGTTCTTACTCAATCTCCAAACCTCCGTATCTGGAAACAGTGCAATACTCGCATCAAATTACTGGAAGAAATCCTTGCTCACTATACAAATGGTATTCGCCGTGACGACAATGGTGACTTCTGGATGAATCCCAACTCTCAACTCGCAACTACTATTGCCTATCGTGCTCATCACAAAGGCCATAACCCTAAGTTCAAACAATACCCAGAAACCTTCACTCTGGACGACATTATTACTGGTAAACCAATCCCTCAAACTGCCCCTGACGAATTACAACTCTCCGATGAAATCGTTGAAGACTATCGCCTTACAGTCCTCTCCATAATCGAAGAATTGCAAGAATGCTATGACGTGCTCGGACAACTTGATATTAATAACACTATAGACCACAAACCCCTCGGTAATGACCATTGGAACCTCCTCTATGAAAAACCCGTATACAAACATTGGTATCAGCTCGTTTCAAATCGACCCCTTAAAGATATCCGCGCCGATTACAACTATGCAAAGGCTAAGGGTGTTAAAGATGAGTGCTCAAAAATCTTGGAGGAGTCAACTATGAAGTCTCGACGTGGCTTTACCGTTCAAAGATTAATGAATGCTATGCGTACTGCCCATTCTAAGGGCTGGTATGTCGTATTCGATACTCTTACTCTAGCCGATGACCGCTTAAAGGATTTCTATGATAATCCCAATGCTCTTCGTGACTACTTCCGTGATATTGGTCGTATGGTGCTTACTGCCGAAGGTCGCTCGGTGCATGACTCATCTTCCGACTGCTATCAGTATTTTTGTGTGCCAGAGTATGGTACACAGCACGGTCGTCTACATTTCCACGCAGTGCATCTTATGCGCACACTTCCTCTGGGTTCTCTGCACCCTAACTTCGGTAAGCTGGTACGCATCAATCGGCAAATAAATAGCTTGCAAAACACGTGGCCTTATGGTTACTCTATGCCCATCGCAGTCCGGTACTCCCAAGACGCATTCTCTCGCGCTGGCTGGCTCTGGCCTGTGGACTCAAAGGGTGAACCCCTTAAAGCTACCTCGTATATGGCTGTAGGCTTCTACGTTGCTAAATACGTTAACAAAAAATCAGATATTGACATGGCCGTAAAAGGCCTAGGGAATAAAGAATGGAACAATTCACTCAAAACCAAAATCAACCTCATACCCAAGAAAGTGTTCAGAATACGAATGTCTCGCAATTTCGGAATGAAACTGTTATCAATGGCTCACCTGTCAGCGGAAACCCTGATGGAACTGACCCAAGTGGGTTACGACGTGACCCCGTTCAACAACATCTTGAAGCAGAACGCCAAGAAAGAGCTCAAATCGAGGCTGGCAAAGAAATCTGTCGCCGACGTTTTGGAGGCGCAACCTGTGACGACGAATCTGCTAAAATTCATGCGCAATTTGACCCGAACAATCGGAGCGTCCAACCTACAGAGTTTTATCGCTTCAATGACCACGAAATTAACAAGTACGGATATTTCTGATGAAACCAAAAACTACGTTGCTTCTGCAGGAATTGCTGTTGCTAACTTACGAATTAAATCGAAGTGGACTGCTGGTGGAAAATGA
+ATGGTTCGTTCTTATTACCCTTCTGAATGTCACGCTGATTATTTTGACTTTGAGCGTATCGAGGCTCTTAAACCTGCTATTGAGGCTTGTGGCATTTCTACTCTTTCTCAATCCCCAATGCTTGGCTTCCATAAGCAGATGGATAACCGCATCAAGCTCTTGGAAGAGATTCTGTCTTTTCGTATGCAGGGCGTTGAGTTCGAT---AATGGTGATATGTATGTTGAC------------------------------------------------GGCCAT------------------------------------------------------------------------------------------AAGGCTGCTTCTGACGTTCGTGATGAGTTTGTATCTGTTACTGAGAAGTTAATGGATGAATTGGCACAATGCTACAATGTGCTCCCCCAACTTGATATTAATAACACTATAGACCACCGCCCCGAAGGGGACGAAAAATGGTTTTTAGAGAACGAGAAGACGGTTACGCAGTTTTGCCGCAAGCTGGCTGCTGAACGCCCTCTTAAGGATATTCGCGATGAGTATAATTACCCCAAAAAGAAAGGTATTAAGGATGAGTGTTCAAGATTGCTGGAGGCCTCCACTATGAAATCGCGTAGAGGCTTTGCTATTCAGCGTTTGATGAATGCAATGCGACAGGCTCATGCTGATGGTTGGTTTATCGTTTTTGACACTCTCACGTTGGCTGACGACCGATTAGAGGCGTTTTATGATAATCCCAATGCTTTGCGTGACTATTTTCGTGATATTGGTCGTATGGTTCTTGCTGCCGAGGGTCGCAAGGCTAATGATTCACACGCCGACTGCTATCAGTATTTTTGTGTGCCTGAGTATGGTACAGCTAATGGCCGTCTTCATTTCCATGCGGTGCACTTTATGCGGACACTTCCTACAGGTAGCGTTGACCCTAATTTTGGTCGTCGGGTACGCAATCGCCGCCAGTTAAATAGCTTGCAAAATACGTGGCCTTATGGTTACAGTATGCCCATCGCAGTTCGCTACACGCAGGACGCTTTTTCACGTTCTGGTTGGTTGTGGCCTGTTGATGCTAAAGGTGAGCCGCTTAAAGCTACCAGTTATATGGCTGTTGGTTTCTATGTGGCTAAATACGTTAACAAAAAGTCAGATATGGACCTTGCTGCTAAAGGTCTAGGAGCTAAAGAATGGAACAACTCACTAAAAACCAAGCTGTCGCTACTTCCCAAGAAGCTGTTCAGAATCAGAATGAGCCGCAACTTCGGGATGAAAATGCTCACAATGACAAATCTGTCCACGGAGTGCTTAATCCAACTTACCAAGCTGGGTTACGACGCGACGCCGTTCAACCAGATATTGAAGCAGAACGCAAAAAGAGAGATGAGATTGAGGCTGGGAAAAGTTACTGTAGCCGACGTTTTGGCGGCGCAACCTGTGACGACAAATCTGCTCAAATTTATGCGCGCTTCGATAAAAATGATTGGCGTATCCAACCTGCAGAGTTTTATCGCTTCCATGACGCAGAAGTTAACACTTTCGGATATTTCTGATGAGTCGAAAAATTATCTTGATAAAGCAGGAATTACTACTGCTTGTTTACGAATTAAATCGAAGTGGACTGCTGGCGGAAAATGA
+
+YP_009497838.1-NP_040705.1(gene B)
+ATGGAACAATTCACTCAAAACCAAAATCAACCTCATACCCAAGAAAGTGTTCAGAATACGAATGTCTCGCAATTTCGGAATGAAACTGTTATCAATGGCTCACCTGTCAGCGGAAACCCTGATGGAACTGACCCAAGTGGGTTACGACGTGACCCCGTTCAACAACATCTTGAAGCAGAACGCCAAGAAAGAGCTCAAATCGAGGCTGGCAAAGAAATCTGTCGCCGACGTTTTGGAGGCGCAACCTGTGACGACGAATCTGCTAAAATTCATGCGCAATTTGACCCGAACAATCGGAGCGTCCAACCTACAGAGTTTTATCGCTTCAATGACCACGAAATTAACAAGTACGGATATTTCTGA
+ATGGAACAACTCACTAAAAACCAAGCTGTCGCTACTTCCCAAGAAGCTGTTCAGAATCAGAATGAGCCGCAACTTCGGGATGAAAATGCTCACAATGACAAATCTGTCCACGGAGTGCTTAATCCAACTTACCAAGCTGGGTTACGACGCGACGCCGTTCAACCAGATATTGAAGCAGAACGCAAAAAGAGAGATGAGATTGAGGCTGGGAAAAGTTACTGTAGCCGACGTTTTGGCGGCGCAACCTGTGACGACAAATCTGCTCAAATTTATGCGCGCTTCGATAAAAATGATTGGCGTATCCAACCTGCAGAGTTTTATCGCTTCCATGACGCAGAAGTTAACACTTTCGGATATTTCTGA
+
+YP_009497839.1-NP_040706.1(gene K)
+ATGAAACCAAAAACTACGTTGCTTCTGCAGGAATTGCTGTTGCTAACTTACGAATTAAATCGAAGTGGACTGCTGGTGGAAAATGAGGAAATTCAATCTCAACTTAAAAAACTCGAGGTCGTCTTACTTTGCAACCTTTCGCCATCATCTCAACGTGCTGGCAAAAACTGA
+ATGAGTCGAAAAATTATCTTGATAAAGCAGGAATTACTACTGCTTGTTTACGAATTAAATCGAAGTGGACTGCTGGCGGAAAATGAGAAAATTCGACCTATCCTTGCGCAGCTCGAGAAGCTCTTACTTTGCGACCTTTCGCCATCAACTAACGATTCTGTCAAAAACTGA
+</pre>
+        <div class="param">
+            <select class="method" size="8" multiple disabled>
+                <option -selected value="NG">NG</option>
+                <option selected value="LWL">LWL</option>
+                <option selected value="MLWL">MLWL</option>
+                <option selected value="LPB">LPB</option>
+                <option selected value="MLPB">MLPB</option>
+                <option selected value="YN">YN</option>
+                <option -selected value="MYN">MYN</option>
+                <option -selected value="GY">GY</option>
+                <option -selected value="MA">MA</option>
+            </select>
+            <select class="model modelef" multiple disabled>
+                <option -selected title="rTC==rAG==rTA==rCG==rTG==rCA; equal pi" value="JC">JC</option>
+                <option -selected title="rTC==rAG!=rTA==rCG==rTG==rCA; equal pi" value="K2P">K2P</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG==rTG==rCA; equal pi" value="TNEF">TNEF</option>
+                <option -selected title="rTC==rAG!=rTA==rCG!=rTG==rCA; equal pi" value="K3P">K3P</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG!=rTG==rCA; equal pi" value="TIMEF">TIMEF</option>
+                <option -selected title="rTC==rAG!=rTA!=rCG!=rTG!=rCA; equal pi" value="TVMEF">TVMEF</option>
+                <option -selected title="rTC!=rAG!=rTA!=rCG!=rTG!=rCA; equal pi" value="SYM">SYM</option>
+            </select>
+            <select class="model modeluf" multiple disabled>
+                <option -selected title="rTC==rAG==rTA==rCG==rTG==rCA; unequal pi" value="F81">F81</option>
+                <option -selected title="rTC==rAG!=rTA==rCG==rTG==rCA; unequal pi" value="HKY">HKY</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG==rTG==rCA; unequal pi" value="TN">TN</option>
+                <option -selected title="rTC==rAG!=rTA==rCG!=rTG==rCA; unequal pi" value="K3PUF">K3PUF</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG!=rTG==rCA; unequal pi" value="TIM">TIM</option>
+                <option -selected title="rTC==rAG!=rTA!=rCG!=rTG!=rCA; unequal pi" value="TVM">TVM</option>
+                <option -selected title="rTC!=rAG!=rTA!=rCG!=rTG!=rCA; unequal pi" value="GTR">GTR</option>
+            </select>
+            <select class="code" disabled>
+                <option value="1">1-Standard</option>
+                <option value="2">2-Vertebrate Mitochondrial</option>
+                <option value="3">3-Yeast Mitochondrial</option>
+                <option value="4">4-Mold Mitochondrial</option>
+                <option value="5">5-Invertebrate Mitochondrial</option>
+                <option value="6">6-Ciliate, Dasycladacean and Hexamita</option>
+                <option value="9">9-Echinoderm and Flatworm Mitochondrial</option>
+                <option value="10">10-Euplotid Nuclear</option>
+                <option value="11">11-Bacterial and Plant Plastid</option>
+                <option value="12">12-Alternative Yeast Nuclear</option>
+                <option value="13">13-Ascidian Mitochondrial</option>
+                <option value="14">14-Alternative Flatworm Mitochondrial</option>
+                <option value="15">15-Blepharisma Nuclear</option>
+                <option value="16">16-Chlorophycean Mitochondrial</option>
+                <option value="21">21-Trematode Mitochondrial</option>
+                <option value="22">22-Scenedesmus obliquus mitochondrial</option>
+                <option value="23">23-Thraustochytrium Mitochondrial</option>
+                <option value="24">24-Rhabdopleuridae Mitochondrial</option>
+                <option value="25">25-Candidate Division SR1 and Gracilibacteria</option>
+                <option value="26">26-Pachysolen tannophilus Nuclear</option>
+                <option value="27">27-Karyorelict Nuclear</option>
+                <option value="28">28-Condylostoma Nuclear</option>
+                <option value="29">29-Mesodinium Nuclear</option>
+                <option value="30">30-Peritrich Nuclear</option>
+                <option value="31">31-Blastocrithidia Nuclear</option>
+                <option value="33">33-Cephalodiscidae Mitochondrial UAA-Tyr</option>
+            </select>
+        </div>
+        <div class="output"></div>
+    </div>
+    <div class="test-group">
+        <pre class="input">MRPL23-Mrpl23
+ATGGCGCGGAATGTGGTGTACCCCCTGTACCGGCTGGGTGGCCCACAACTTCGGGTGTTCCGAACCAACTTCTTCATTCAGCTGGTGCGGCCCGGTGTGGCCCAGCCCGAGGACACCGTGCAGTTCCGGATCCCCATGGAAATGACAAGGGTGGACCTCAGGAATTACCTCGAGGGCATCTATAACGTGCCCGTGGCTGCTGTGCGGACACGGGTGCAGCATGGCTCTAACAAGAGAAGAGATCACAGAAACGTGAGGATCAAGAAGCCGGACTACAAGGTCGCCTACGTGCAGCTGGCCCATGGACAGACCTTCACGTTCCCAGATCTGTTTCCCGAGAAAGAC---GAGAGCCCTGAAGGCAGCGCTGCCGACGACCTCTACAGCATGCTCGAGGAGGAGAGGCAGCAGAGGCAGAGCAGCGACCCGCGGCGGGGCGGCGTCCCCAGCTGGTTCGGGCTG
+ATGGCGCGGAATGTGTTGTACCCCCTTTACCAACTGGGTGGCCCCCAGCTCCGTGTATTTCGAACTAACTTCTTCATTCAGCTGGTGCGGCCTGGTACTGCACAGCCTGAAGATACCGTGCAGTTCCGGATCCCCATGGAGATGACCAGGGTGGACCTTCGGAATTACCTTGAGCAGATTTACAATGTTCCCGTGGCTGCCGTGCGCACACGGGTGCAGCATGGCTCCAACAGGAGGAGGGATCACAAGAATGTGAGGATCAAGAAACCAGACTACAAAGTGGCCTACGTGCAGCTGGCCCATGGGCAGACCTTCACTTTCCCAGATCTTTTTCCAGAGAAGGACCCCCGTTCTCCAGAA------------------------CCTCTGGAAGAGGAGCTACCCCAGCAGAGGCAAAGCAGCGACCTGAGGTGCCCTGGTATCCCTTCCTGGTTTGGCCTA
+
+SCYL1-Scyl1
+ATGTGGTTCTTTGCCCGGGACCCGGTCCGGGACTTTCCGTTCGAGCTCATCCCGGAGCCCCCAGAGGGCGGCCTGCCCGGGCCCTGGGCCCTGCACCGCGGCCGCAAGAAGGCCACAGGCAGCCCCGTGTCCATCTTCGTCTATGATGTGAAGCCTGGCGCGGAAGAGCAGACCCAGGTGGCCAAAGCTGCCTTCAAGCGCTTCAAAACTCTACGGCACCCCAACATCCTGGCTTACATCGATGGACTGGAGACAGAAAAATGCCTCCACGTCGTGACAGAGGCTGTGACCCCGTTGGGAATATACCTCAAGGCGAGAGTGGAGGCTGGTGGCCTGAAGGAGCTGGAGATCTCCTGGGGGCTACACCAGATCGTGAAAGCCCTCAGCTTCCTGGTCAACGACTGCAGCCTCATCCACAACAATGTCTGCATGGCCGCCGTGTTCGTGGACCGAGCTGGCGAGTGGAAGCTTGGGGGCCTGGACTACATGTATTCGGCCCAGGGCAACGGTGGGGGACCTCCCCGCAAGGGGATCCCCGAGCTTGAGCAGTATGACCCCCCGGAGTTGGCTGACAGCAGTGGCAGAGTGGTCAGAGAGAAGTGGTCAGCAGACATGTGGCGCTTGGGCTGCCTCATTTGGGAAGTCTTCAATGGGCCCCTACCTCGGGCAGCAGCCCTACGCAACCCTGGGAAGATCCCCAAAACGCTGGTGCCCCATTACTGTGAGCTGGTGGGAGCAAACCCCAAGGTGCGTCCCAACCCAGCCCGCTTCCTGCAGAACTGCCGGGCACCTGGTGGCTTCATGAGCAACCGCTTTGTAGAAACCAACCTCTTCCTGGAGGAGATTCAGATCAAAGAGCCAGCCGAGAAGCAAAAATTCTTCCAGGAGCTGAGCAAGAGCCTGGACGCATTCCCTGAGGATTTCTGTCGGCACAAGGTGCTGCCCCAGCTGCTGACCGCCTTCGAGTTCGGCAATGCTGGGGCCGTTGTCCTCACGCCCCTCTTCAAGGTGGGCAAGTTCCTGAGCGCTGAGGAGTATCAGCAGAAGATCATCCCTGTGGTGGTCAAGATGTTCTCATCCACTGACCGGGCCATGCGCATCCGCCTCCTGCAGCAGATGGAGCAGTTCATCCAGTACCTTGACGAGCCAACAGTCAACACCCAGATCTTCCCCCACGTCGTACATGGCTTCCTGGACACCAACCCTGCCATCCGGGAGCAGACGGTCAAGTCCATGCTGCTCCTGGCCCCAAAGCTGAACGAGGCCAACCTCAATGTGGAGCTGATGAAGCACTTTGCACGGCTACAGGCCAAGGATGAACAGGGCCCCATCCGCTGCAACACCACAGTCTGCCTGGGCAAAATCGGCTCCTACCTCAGTGCTAGCACCAGACACAGGGTCCTTACCTCTGCCTTCAGCCGAGCCACTAGGGACCCGTTTGCACCGTCCCGGGTTGCGGGTGTCCTGGGCTTTGCTGCCACCCACAACCTCTACTCAATGAACGACTGTGCCCAGAAGATCCTGCCTGTGCTCTGCGGTCTCACTGTAGATCCTGAGAAATCCGTGCGAGACCAGGCCTTCAAGGCCATTCGGAGCTTCCTGTCCAAATTGGAGTCTGTGTCGGAGGACCCGACCCAGCTGGAGGAAGTGGAGAAGGATGTCCATGCAGCCTCCAGCCCTGGCATGGGAGGAGCCGCAGCTAGCTGGGCAGGCTGGGCCGTGACCGGGGTCTCCTCACTCACCTCCAAGCTGATCCGTTCGCACCCAACCACTGCCCCAACAGAAACCAACATTCCCCAAAGACCCACGCCTGAAGGCCACTGGGAGACGCAGGAGGAGGACAAGGACACAGCAGAGGACAGCAGCACTGCTGACAGATGGGACGACGAAGACTGGGGCAGCCTGGAGCAGGAGGCCGAGTCTGTGCTGGCCCAGCAGGACGACTGGAGCACCGGGGGCCAAGTGAGCCGTGCTAGTCAGGTCAGCAACTCCGACCACAAATCCTCCAAATCCCCAGAGTCCGACTGGAGCAGCTGGGAAGCTGAGGGCTCCTGGGAACAGGGCTGGCAGGAGCCAAGCTCCCAGGAGCCACCTCCTGACGGTACACGGCTGGCCAGCGAGTATAACTGGGGTGGCCCAGAGTCCAGCGACAAGGGCGACCCCTTCGCTACCCTGTCTGCACGTCCCAGCACCCAGCCGAGG------CCAGACTCTTGGGGTGAGGACAACTGGGAGGGCCTCGAGACTGACAGTCGACAGGTCAAGGCTGAGCTGGCCCGGAAGAAGCGCGAGGAGCGGCGGCGGGAGATGGAGGCCAAACGCGCCGAGAGGAAGGTGGCCAAGGGCCCCATGAAGCTGGGAGCCCGGAAGCTGGAC
+ATGTGGTTCTTTGCCCGGGACCCGGTCCGGGACTTCCCGTTCGAGCTGAGCCCTGAGCCCCCCGAAGGCGGGCCGCCCGGGCCCTGGATCCTGCACCGAGGCCGCAAAAAGGCCACAGGCAGCGCAGTGTCCATCTTCGTGTATGATGTGAAACCGGGAGCTGAAGAGCAGACCCAGGTGGCCAAAGCTGCCTTCAAACGCCTCAAAACTCTCCGACACCCCAACATCCTGGCCTATATCGATGGGTTGGAGACAGAAAAGTGCCTCCACATCGTGACAGAGGCTGTGACCCCCCTGGGAACATACCTCAAGGCACGAGCAGAAGCAGGTGGCCTGAAGGAGCAGGAGCTGTCATGGGGGTTACACCAGATCGTGAAAGCCCTCAGCTTCCTGGTCAACGACTGCAACCTCATCCACAATAATGTCTGCATGGCCGCTGTGTTTGTGGACAGGGCTGGCGAGTGGAAACTTGGGGGTCTGGACTACATGTACTCGGCACAGGGCAACGGCGGGGGACCACCCAGCAAGGGGATCCCGGAGCTCGAGCAGTATGATCCCCCGGAGCTGGCTGACAGCAGTAGCAGAGCAGTCAGAGAGAAGTGGTCAGCAGACATGTGGCGCTTGGGCTGCCTCATCTGGGAAGTTTTCAATGGGTCTCTACCTCGGGCAGCTGCCCTGCGCAACCCTGGGAAGATCCCCAAATCCCTGGTGACCCATTACTGTGAACTGGTGGGAGCTAACCCAAAAGTACGTCCCAACCCGGCCCGCTTCCTGCAGAACTGCCGGGCACCCGGTGGCTTCATGAGCAACCGCTTTGTTGAGACCAACCTCTTCCTGGAGGAGATTCAGATCAAAGAGCCAGCTGAGAAGCAGAAGTTCTTCCAAGAGCTGAGCAAGAGTCTAGACTCATTTCCCGAAGATTTCTGTCGACACAAGGTGCTGCCCCAGCTACTGACTGCCTTTGAGTTTGGCAATGCTGGGGCCGTGGTCCTCACACCTCTCTTCAAGGTGGGAAAATCCCTCCGTGCTGAAGAGTACCAGGAGAAGATCATCCCCGTGGTAGTTAAGATGTTCTCATCCACCGACCGGGCCATGCGCATCCGCCTCCTCCAGCAGATGGAGCAGTTCATCCAATACCTTGATGAGCCAACAGTCAACACGCAGATTTTCCCCCACGTCACACATGGCTTCCTGGACACCAACCCCGCCATCCGCGAGCAGACGGTCAAGTCCATGCTGCTCTTGGCCCCAAAGCTGAATGAGGCCAATCTCAATGTGGAACTGATGAAGCACTTTGCAAGGCTACAAGCCAAGGACGACCAGGGTCCTATCCGCTGCAACACCACGGTCTGCTTGGGCAAAATCGGCTCCTATCTCAGTGCTAGTACTAGACACAGGGTCCTCACCTCCGCCTTCAGCAGAGCCACTAAGGACCCATTTGCACCATCCCGGGTTGCGGGTGTCCTGGGCTTTGCTGCCACACACAATCTCTATTCGATGGACGACTGTGCCCATAAGATCCTGCCTGTGCTCTGTGGCCTTACTGTGGACCCTGAGAAATCTGTGCGGGACCAGGCCTTTAAGACCATTCGAAGCTTCCTGTCCAAATTAGAGTCTGTGTCAGAGGATCCCACCCAGCTGGCAGAAGTAGAGAAGGATGTCCATGCAGCGTCCAGTCCTGGAACAGGAGGAGCTGCAGCCAGCTGGGCAGGCTGGGCTGTGACTGGGGTATCCTCTCTCACCTCCAAGCTGATCCGAGCACACCCCACGCCTGTGCCGTCTGATACCACTGTGCCCCAGAGACCAGTGCCAGAGGGGCACTGGGAGACACAG---GAAGACAAGGACACTGCAGAAGACAGCGCCACTGCTGACAGATGGGACGATGAGGACTGGGGCAGCTTGGAGCAGGAAGCTGAATCCGTGTTGGCACAGCAGGATGACTGGAGTGCCAAGGGCCAAGGAAGCCGAGCTGGACAGATCAACCACCCAGACCACAAATCTCTG---------GAATCACATTGGAGCAGCTGGGAAGTTGAGGGCTCCTGGGACCAGGGCTGGCAGGAACCCAGCTCTGTGGAGCCACCTCCAGAAGGCACTCGGCTAGCTAGCGAATATAACTGGGGTGGTGCAGAGCCCAGTGACAAGGGCGACCCCTTTGCTGCCCTGTCTGTTCGTCCCAGCGCTCAGCCCAGGCCAGACCCAGACTCCTGGGGTGAAGACAACTGGGAAGGCTTGGAGGCTGAGAGCAGACAGGTAAAGGCAGAGCTGGCCCGGAAAAAGCGAGAGGAAAGGAGAAGAGAAATGGAAGCCAAACGGGCAGAGAAAAAGACCACCAAGGGGCCCATGAAGCTGGGAGCCCGGAAGCTGGAC
+
+HOXC12-Hoxc12
+ATGGGCGAGCATAATCTCCTGAATCCCGGGTTTGTGGGGCCGCTGGTAAACATCCACACGGGAGACACCTTCTACTTCCCCAACTTCCGCGCGTCCGGGGCGCAGCTTCCCGGGCTGCCTTCGCTGTCCTACCCACGCCGCGACAACGTGTGCTCCCTGTCCTGGCCGTCGGCGGAGCCGTGCAATGGCTACCCGCAGCCCTACCTCGGCAGCCCAGTGTCTCTCAACCCTCCCTTCGGCCGCACGTGCGAGCTGGCGCGCGTGGAGGACGGCAAGGGTTACTACCGCGAGCCGTGCGCCGAGGGTGGCGGCGGGGGCCTGAAGCGTGAGGAGCGCGGGCGCGACCCGGGAGCCGGGCCCGGGGCAGCGCTGCTCCCGCTGGAGCCGTCGGGGCCGCCTGCGCTCGGCTTCAAGTACGACTACGCGGCGGGCGGCGGCGGTGGCGACGGCGGCGGCGGCGCAGGACCTCCGCACGACCCGCCCTCCTGCCAGTCGCTGGAATCCGACTCCAGTTCGTCCCTGCTCAACGAGGGCAACAAGGGCGCCGGCGCAGGCGACCCCGGCAGCTTGGTATCGCCGTTGAACCCCGGCGGCGGGCTCTCGGCCAGCGGCGCGCCCTGGTACCCGATCAACAGCCGCTCTCGGAAGAAGCGCAAGCCCTATTCGAAGTTGCAACTGGCAGAGCTGGAGGGCGAGTTTCTGGTCAACGAGTTCATCACACGCCAGCGCCGGAGGGAACTCTCAGACCGCTTGAATCTTAGTGACCAGCAGGTCAAGATCTGGTTTCAGAACCGGAGAATGAAAAAGAAAAGACTTCTGTTGAGGGAGCAAGCTCTCTCCTTCTTT
+ATGGGCGAGCATAATCTCCTGAATCCTGGGTTTGTGGGGCCGCTGGTGAATATCCACACAGGAGACACCTTCTACTTCCCCAACTTCCGCGCGTCAGGGGCACAACTCCCGGGGCTGCCTTCGCTGTCCTACCCACGCCGCGACAACGTGTGCTCGCTGCCTTGGCCGTCGGCCGAGCCGTGCAATGGCTACCCACAGCCCTATCTCGGCAGTCCCGTGTCTCTCAACCCGCCTTTCGGCCGCACGTGCGAGTTGGCTCGCGTGGAGGATAGCAAGGGTTACTACCGAGAACCCTGCGCTGAGGGCGGCGGCGGGGGCCTAAAGCGGGAGGAGCGCGGGCGCGAACCCGGAGCGGGACCCGGGGCAGCGCTACTGCAGCTGGAGCCGTCGGGGCCACCTGCGCTCGGCTTCAAGTACGACTACACGGCGAGCGGCGGCGGTGGCGAC------GGCAGCACGGGACCCCCCCACGATCCACCCTCGTGCCAGTCACTGGAATCCGACTCCAGTTCGTCCCTACTCAACGAGGGCAATAAGAGCGCCAGCGCTGGTGACCCTGGCTCTCTGGTTTCGCCGTTGAACCCAGGCGGCGGGCTCTCAGCCAGCGGCGCGCCCTGGTACCCGATCCACAGCCGCTCGCGAAAGAAGCGCAAGCCGTATTCGAAGTTGCAGCTGGCTGAGCTGGAGGGCGAGTTTCTGGTCAACGAGTTCATCACACGCCAGCGTCGGAGGGAACTCTCGGACCGCTTGAATCTTAGTGATCAGCAGGTCAAGATTTGGTTCCAGAACCGGAGAATGAAAAAGAAAAGACTTCTGCTGAGGGAGCAAGCTCTCTCCTTCTTC
+</pre>
+        <div class="param">
+            <select class="method" size="8" multiple disabled>
+                <option selected value="NG">NG</option>
+                <option -selected value="LWL">LWL</option>
+                <option -selected value="MLWL">MLWL</option>
+                <option -selected value="LPB">LPB</option>
+                <option -selected value="MLPB">MLPB</option>
+                <option -selected value="YN">YN</option>
+                <option -selected value="MYN">MYN</option>
+                <option selected value="GY">GY</option>
+                <option -selected value="MA">MA</option>
+            </select>
+            <select class="model modelef" multiple disabled>
+                <option -selected title="rTC==rAG==rTA==rCG==rTG==rCA; equal pi" value="JC">JC</option>
+                <option -selected title="rTC==rAG!=rTA==rCG==rTG==rCA; equal pi" value="K2P">K2P</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG==rTG==rCA; equal pi" value="TNEF">TNEF</option>
+                <option -selected title="rTC==rAG!=rTA==rCG!=rTG==rCA; equal pi" value="K3P">K3P</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG!=rTG==rCA; equal pi" value="TIMEF">TIMEF</option>
+                <option -selected title="rTC==rAG!=rTA!=rCG!=rTG!=rCA; equal pi" value="TVMEF">TVMEF</option>
+                <option -selected title="rTC!=rAG!=rTA!=rCG!=rTG!=rCA; equal pi" value="SYM">SYM</option>
+            </select>
+            <select class="model modeluf" multiple disabled>
+                <option -selected title="rTC==rAG==rTA==rCG==rTG==rCA; unequal pi" value="F81">F81</option>
+                <option -selected title="rTC==rAG!=rTA==rCG==rTG==rCA; unequal pi" value="HKY">HKY</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG==rTG==rCA; unequal pi" value="TN">TN</option>
+                <option -selected title="rTC==rAG!=rTA==rCG!=rTG==rCA; unequal pi" value="K3PUF">K3PUF</option>
+                <option -selected title="rTC!=rAG!=rTA==rCG!=rTG==rCA; unequal pi" value="TIM">TIM</option>
+                <option -selected title="rTC==rAG!=rTA!=rCG!=rTG!=rCA; unequal pi" value="TVM">TVM</option>
+                <option -selected title="rTC!=rAG!=rTA!=rCG!=rTG!=rCA; unequal pi" value="GTR">GTR</option>
+            </select>
+            <select class="code" disabled>
+                <option value="1">1-Standard</option>
+                <option value="2">2-Vertebrate Mitochondrial</option>
+                <option value="3">3-Yeast Mitochondrial</option>
+                <option value="4">4-Mold Mitochondrial</option>
+                <option value="5">5-Invertebrate Mitochondrial</option>
+                <option value="6">6-Ciliate, Dasycladacean and Hexamita</option>
+                <option value="9">9-Echinoderm and Flatworm Mitochondrial</option>
+                <option value="10">10-Euplotid Nuclear</option>
+                <option value="11">11-Bacterial and Plant Plastid</option>
+                <option value="12">12-Alternative Yeast Nuclear</option>
+                <option value="13">13-Ascidian Mitochondrial</option>
+                <option value="14">14-Alternative Flatworm Mitochondrial</option>
+                <option value="15">15-Blepharisma Nuclear</option>
+                <option value="16">16-Chlorophycean Mitochondrial</option>
+                <option value="21">21-Trematode Mitochondrial</option>
+                <option value="22">22-Scenedesmus obliquus mitochondrial</option>
+                <option value="23">23-Thraustochytrium Mitochondrial</option>
+                <option value="24">24-Rhabdopleuridae Mitochondrial</option>
+                <option value="25">25-Candidate Division SR1 and Gracilibacteria</option>
+                <option value="26">26-Pachysolen tannophilus Nuclear</option>
+                <option value="27">27-Karyorelict Nuclear</option>
+                <option value="28">28-Condylostoma Nuclear</option>
+                <option value="29">29-Mesodinium Nuclear</option>
+                <option value="30">30-Peritrich Nuclear</option>
+                <option value="31">31-Blastocrithidia Nuclear</option>
+                <option value="33">33-Cephalodiscidae Mitochondrial UAA-Tyr</option>
+            </select>
+        </div>
+        <div class="output"></div>
+    </div>
+</body>
+<script src="src/base.js"></script>
+<script src="src/KaKs.js"></script>
+<script src="src/NG.js"></script>
+<script src="src/LWL.js"></script>
+<script src="src/YN.js"></script>
+<script src="src/GY.js"></script>
+<script src="src/MA.js"></script>
+<script>
+    function createTable(data) {
+        let table = document.createElement("table")
+        table.append(...data.trim().split(/\n/).map(row => {
+            let tr = document.createElement("tr")
+            tr.append(...row.trimEnd().split("\t").map(x => {
+                let td = document.createElement("td")
+                td.innerText = x || ""
+                return td
+            }))
+            return tr
+        }))
+        return table
+    }
+</script>
+<script>
+    for (let ele of document.querySelectorAll(".test-group")) {
+        let data = ele.querySelector(".input").innerText
+        let models = [
+            ...ele.querySelector(".modelef").selectedOptions,
+            ...ele.querySelector(".modeluf").selectedOptions
+        ].map(x => x.value)
+        let methods = [...ele.querySelector(".method").selectedOptions].map(x => x.value)
+        let code = ele.querySelector(".code").value
+        let kk = new KAKS(code)
+        ele.querySelector(".output").replaceChildren(
+            createTable(kk.Run(data, methods, { gy_models: models }))
+        )
+    }
+</script>
+
+</html>
